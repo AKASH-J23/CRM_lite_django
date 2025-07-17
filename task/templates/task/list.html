@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List page</title>
+</head>
+<body>
+    <div>
+        <h1>Task List</h1>
+        {% for task in tasks %}
+            <div>
+                <h1>{{ task.title }}</h1>
+                <p>{{ task.description }}</p>
+                <p>Created at: {{ task.created_at }}</p>
+                <p>Due date: {{ task.due_date }}</p>
+                <p>Assigned to: {{ task.assigned_to }}</p>
+                <p>Updated at: {{ task.updated_at }}</p>
+                <p>Status: {{ task.status }}</p>
+                <p>created_by: {{task.created_by}}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
