@@ -1,25 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List page</title>
-</head>
-<body>
-    <div>
-        <h1>Task List</h1>
-        {% for task in tasks %}
-            <div>
-                <h1>{{ task.title }}</h1>
-                <p>{{ task.description }}</p>
-                <p>Created at: {{ task.created_at }}</p>
-                <p>Due date: {{ task.due_date }}</p>
-                <p>Assigned to: {{ task.assigned_to }}</p>
-                <p>Updated at: {{ task.updated_at }}</p>
-                <p>Status: {{ task.status }}</p>
-                <p>created_by: {{task.created_by}}</p>
-            </div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+{% extends 'task/base.html' %}
+{% block title %}Tasks{% endblock %}
+{% block content %}
+<h2>Task List</h2>
+<a href="{% url 'tasks:task-create' %}" class="btn btn-primary mb-2">Create Task</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Assigned To</th>
+      <th>Status</th>
+      <th>Due</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+      <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.assigned_to.full_name }}</td>
+        <td>{{ task.status }}</td>
+        <td>{{ task.due_date }}</td>
+        <td>
+          <a href="{% url 'tasks:task-detail' task.pk %}" class="btn btn-sm btn-info">View</a>
+          <a href="{% url 'tasks:task-update' task.pk %}" class="btn btn-sm btn-warning">Edit</a>
+          <a href="{% url 'tasks:task-delete' task.pk %}" class="btn btn-sm btn-danger">Delete</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">No tasks found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

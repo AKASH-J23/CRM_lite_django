@@ -1,49 +1,49 @@
 from django.shortcuts import render
 from . import models
-from django.forms import Form
+from .forms import TaskForm
 
-# def get_all_tasks_view(request):
-#     content = ''
-#     template_name = ''
-#     if (request.method == 'GET'):
-#         content = models.Task.objects.all()
-#         template_name = 'task/list.html'
+def create_task(request, *args, **kwargs):
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = models.Task(
+                title=form.cleaned_data['title'],
+                description=form.cleaned_data['description'],
+                due_date=form.cleaned_data['due_date'],
+                assigned_to=form.cleaned_data['assigned_to'],
+                status=form.cleaned_data['status'],
+            )
+            task.save()
+            return render(request, 'task/detail.html', {'task': task})
+    else:
+        form = TaskForm()
 
-#     # if (request.method == 'POST'):
-#     #     content = models.Task.create(
-#     #         title=request.POST.get('title'),
-#     #         description=request.POST.get('description'),
-#     #         created_at=request.POST.get('created_at'),
-#     #         due_date=request.POST.get('due_date'),
-#     #         assigned_to=request.POST.get('assigned_to'),
-#     #         updated_at=request.POST.get('updated_at'),
-#     #         status=request.POST.get('status'),
-#     #         created_by=request.POST.get('created_by')
-#     #     )
-#     #     template_name = 'task/list.html'
+    return render(request, 'task/create.html', {'form': form})
 
-#     print("This is the content data", content)
+def list_tasks(request):
+    tasks = models.Task.objects.all()
+    return render(request, 'task/list.html', {'tasks': tasks})
+
+def task_detail(request, pk):
+    task = models.Task.objects.get(pk=pk)
+    return render(request, 'task/detail.html', {'task': task})
+
+def task_update(request, pk):
+    task = models.Task.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return render(request, 'task/detail.html', {'task': task})
+    else:
+        form = TaskForm(instance=task)
+
+    return render(request, 'task/update.html', {'form': form, 'task': task})
+
+def task_delete(request, pk):
+    task = models.Task.objects.get(pk=pk)
+    if request.method == 'POST':
+        task.delete()
+        return render(request, 'task/list.html', {'tasks': models.Task.objects.all()})
     
-#     context = {
-#         'tasks': content
-#     }
-    
-#     return render(request, template_name, context)
-
-# def create_task_view(request):
-    
-#     context = {}
-#     if (request.method == 'POST'):
-#         content = Form(
-#             title=request.POST.get('title'),
-#             description=request.POST.get('description'),
-#             created_at=request.POST.get('created_at'),
-#             due_date=request.POST.get('due_date'),
-#             assigned_to=request.POST.get('assigned_to'),
-#             updated_at=request.POST.get('updated_at'),
-#             status=request.POST.get('status'),
-#             created_by=request.POST.get('created_by')
-#         )
-#         context['content'] = content
-
-#     return render(request, 'task/create.html', context)
+    return render(request, 'task/delete.html', {'task': task})
