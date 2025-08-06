@@ -10,6 +10,14 @@
     <div class="container">
       <a class="navbar-brand" href="{% url 'tasks:task-list' %}">TaskManager</a>
     </div>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'auth:logout' %}">
+      {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'auth:login' %}">Login</a>
+    {% endif %}
   </nav>
   <div class="container">
     {% block content %}
