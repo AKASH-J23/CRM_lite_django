@@ -49,7 +49,9 @@ def task_update(request, pk):
 
 def task_delete(request, pk):
     task = models.Task.objects.get(pk=pk)
+    print("task to delete", task)
     if request.method == 'POST':
+        print("deleting task", task)
         task.delete()
         return redirect('tasks:task-list')
         # return render(request, 'task/list.html', {'tasks': models.Task.objects.all()})
