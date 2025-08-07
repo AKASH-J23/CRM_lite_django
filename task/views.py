@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from . import models
 from .forms import TaskForm, TaskModelForm, ContactForm
 from django.forms import formset_factory
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def create_task(request):
     if request.method == 'POST':
         form = TaskModelForm(request.POST)
@@ -25,14 +27,17 @@ def create_task(request):
 
     return render(request, 'task/create.html', {'form': form})
 
+@login_required
 def list_tasks(request):
     tasks = models.Task.objects.all()
     return render(request, 'task/list.html', {'tasks': tasks})
 
+@login_required
 def task_detail(request, pk):
     task = models.Task.objects.get(pk=pk)
     return render(request, 'task/detail.html', {'task': task})
 
+@login_required
 def task_update(request, pk):
     task = models.Task.objects.get(pk=pk)
     if request.method == 'POST':
@@ -47,6 +52,7 @@ def task_update(request, pk):
 
     return render(request, 'task/update.html', {'form': form, 'task': task})
 
+@login_required
 def task_delete(request, pk):
     task = models.Task.objects.get(pk=pk)
     print("task to delete", task)
@@ -60,6 +66,7 @@ def task_delete(request, pk):
 
 ContactFormSet = formset_factory(ContactForm, extra=3)
 
+@login_required
 def formview(request):
     formset = ContactFormSet()
     return render(request, 'task/formset.html', {'formset': formset})

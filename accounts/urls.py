@@ -1,11 +1,12 @@
 app_name = 'auth'
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import CustomLoginView, CustomLogoutView
+from .views import CustomLoginView, CustomLogoutView, customSignupView
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
+    path('signup/', customSignupView.as_view(), name='signup'),
     path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

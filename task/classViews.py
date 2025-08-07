@@ -4,13 +4,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from .forms import TaskModelForm, ContactForm
 # from django.forms import formset_factory
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class TaskListView(View):
+class TaskListView(LoginRequiredMixin, View):
     def get(self, request):
         tasks = models.Task.objects.all()
         return render(request, 'task/list.html', {'tasks': tasks})
     
-class TaskDetailView(generic.DetailView):
+class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Task
     template_name = 'task/detail.html'
     context_object_name = 'task'
@@ -22,7 +23,7 @@ class TaskDetailView(generic.DetailView):
         # return models.Task.objects.get(id=id_field)
         return models.Task.objects.all()
     
-class TaskCreateView(generic.CreateView):
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Task
     template_name = 'task/create.html'
     form_class = TaskModelForm
@@ -37,7 +38,7 @@ class TaskCreateView(generic.CreateView):
         # return super().get_success_url()
     
 
-class TaskDeleteView(generic.DeleteView):
+class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Task
     template_name = 'task/delete.html'
     context_object_name = 'task'
@@ -47,7 +48,7 @@ class TaskDeleteView(generic.DeleteView):
         print("deleting task", self.get_object())
         return super().delete(request, *args, **kwargs)
     
-class TaskUpdateView(generic.UpdateView):
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Task
     template_name = 'task/update.html'
     form_class = TaskModelForm
